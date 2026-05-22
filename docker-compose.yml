@@ -1,0 +1,9 @@
+services:
+  bibliometrix:
+    build: .
+    image: jonaslimads/bibliometrix:5.4.0
+    ports:
+      - "3838:3838"
+    volumes:
+      - ./scripts:/home/bibliometrix/scripts
+

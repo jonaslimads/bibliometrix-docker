@@ -7,12 +7,15 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libssl-dev \
     libpoppler-cpp-dev \
-    chromium \
+    curl \
+    wget \
+    && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt-get install -y ./google-chrome-stable_current_amd64.deb \
+    && rm google-chrome-stable_current_amd64.deb \
     && rm -rf /var/lib/apt/lists/*
 
 RUN Rscript -e "install.packages('bibliometrix', repos='https://cloud.r-project.org'); if (!requireNamespace('bibliometrix', quietly=TRUE)) stop('bibliometrix installation failed')"
 
-# runtime deps that biblioshiny installs on first launch — bake them into the image
 RUN Rscript -e "install.packages(c( \
     'wordcloud2','ggmap','maps','shinydashboard','fresh','waiter', \
     'shinydashboardPlus','shinyjs','RCurl','shinyWidgets','chromote', \
@@ -25,6 +28,6 @@ COPY biblioshiny-start.R /usr/local/src/biblioshiny-start.R
 
 EXPOSE 3838
 
-ENV CHROMOTE_CHROME=/usr/bin/chromium
+ENV CHROMOTE_CHROME=/usr/bin/google-chrome
 
 CMD ["Rscript", "/usr/local/src/biblioshiny-start.R"]
